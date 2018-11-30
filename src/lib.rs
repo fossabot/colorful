@@ -95,19 +95,66 @@ impl<T> Base for T where T: StrMarker {
 }
 
 pub trait ColorStyleInterface {
+    // style
     fn bold(self) -> ColorfulString;
     fn blink(self) -> ColorfulString;
+    fn dim(self) -> ColorfulString;
+    fn underlined(self) -> ColorfulString;
+    fn reverse(self) -> ColorfulString;
+    fn hidden(self) -> ColorfulString;
+    // color
+    fn black(self) -> ColorfulString;
+    fn red(self) -> ColorfulString;
+    fn green(self) -> ColorfulString;
+    fn yellow(self) -> ColorfulString;
+    fn blue(self) -> ColorfulString;
+    fn magenta(self) -> ColorfulString;
+    fn cyan(self) -> ColorfulString;
+    fn light_gray(self) -> ColorfulString;
+    fn dark_gray(self) -> ColorfulString;
+    fn light_red(self) -> ColorfulString;
+    fn light_green(self) -> ColorfulString;
+    fn light_yellow(self) -> ColorfulString;
+    fn light_blue(self) -> ColorfulString;
+    fn light_magenta(self) -> ColorfulString;
+    fn light_cyan(self) -> ColorfulString;
+    fn white(self) -> ColorfulString;
 }
 
 
 impl<T> ColorStyleInterface for T where T: Base {
-    fn bold(self) -> ColorfulString {
-        self.style(Style::Bold)
-    }
+    // style
+    fn bold(self) -> ColorfulString { self.style(Style::Bold) }
+    fn blink(self) -> ColorfulString { self.style(Style::Blink) }
+    fn dim(self) -> ColorfulString { self.style(Style::Dim) }
+    fn underlined(self) -> ColorfulString { self.style(Style::Underlined) }
+    fn reverse(self) -> ColorfulString { self.style(Style::Reverse) }
+    fn hidden(self) -> ColorfulString { self.style(Style::Hidden) }
+    // color
+    fn black(self) -> ColorfulString { self.color(Color::Black) }
+    fn red(self) -> ColorfulString { self.color(Color::Red) }
+    fn green(self) -> ColorfulString { self.color(Color::Green) }
+    fn yellow(self) -> ColorfulString { self.color(Color::Yellow) }
+    fn blue(self) -> ColorfulString { self.color(Color::Blue) }
+    fn magenta(self) -> ColorfulString { self.color(Color::Magenta) }
+    fn cyan(self) -> ColorfulString { self.color(Color::Cyan) }
+    fn light_gray(self) -> ColorfulString { self.color(Color::LightGray) }
+    fn dark_gray(self) -> ColorfulString { self.color(Color::DarkGray) }
+    fn light_red(self) -> ColorfulString { self.color(Color::LightRed) }
+    fn light_green(self) -> ColorfulString { self.color(Color::LightGreen) }
+    fn light_yellow(self) -> ColorfulString { self.color(Color::LightYellow) }
+    fn light_blue(self) -> ColorfulString { self.color(Color::LightBlue) }
+    fn light_magenta(self) -> ColorfulString { self.color(Color::LightMagenta) }
+    fn light_cyan(self) -> ColorfulString { self.color(Color::LightCyan) }
+    fn white(self) -> ColorfulString { self.color(Color::White) }
+}
 
-    fn blink(self) -> ColorfulString {
-        self.style(Style::Blink)
-    }
+pub trait ExtraColorInterface {
+    fn grey0(self) -> ColorfulString;
+}
+
+impl<T> ExtraColorInterface for T where T: Base {
+    fn grey0(self) -> ColorfulString { self.color(Color::Grey0) }
 }
 
 

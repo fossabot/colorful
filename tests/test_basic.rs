@@ -33,6 +33,8 @@ fn test_interface() {
     let s = "Hello world";
     assert_eq!("\x1B[1mHello world\x1B[0m".to_owned(), s.bold().to_string());
     assert_eq!("\x1B[1;5mHello world\x1B[0m".to_owned(), s.bold().blink().to_string());
+    assert_eq!("\x1B[38;5;1mHello world\x1B[0m".to_owned(), s.red().to_string());
+    assert_eq!("\x1B[38;5;2mHello world\x1B[0m".to_owned(), s.red().green().to_string());
 }
 
 #[test]
