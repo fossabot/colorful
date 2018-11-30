@@ -12,7 +12,7 @@ fn test_1() {
 
 #[test]
 fn test_color() {
-    use colorful::Base;
+    use colorful::Colorful;
     let s = "Hello world";
     assert_eq!("\x1B[38;5;1mHello world\x1B[0m".to_owned(), s.color(Color::Red).to_string());
     assert_eq!("\x1B[38;5;220mHello world\x1B[0m".to_owned(), s.color(Color::Red).color(Color::Gold1).to_string());
@@ -21,7 +21,7 @@ fn test_color() {
 
 #[test]
 fn test_style() {
-    use colorful::Base;
+    use colorful::Colorful;
     let s = "Hello world";
     assert_eq!("\x1B[1mHello world\x1B[0m".to_owned(), s.style(Style::Bold).to_string());
     assert_eq!("\x1B[1;5mHello world\x1B[0m".to_owned(), s.style(Style::Bold).style(Style::Blink).to_string());
@@ -29,7 +29,7 @@ fn test_style() {
 
 #[test]
 fn test_interface() {
-    use colorful::ColorStyleInterface;
+    use colorful::Colorful;
     let s = "Hello world";
     assert_eq!("\x1B[1mHello world\x1B[0m".to_owned(), s.bold().to_string());
     assert_eq!("\x1B[1;5mHello world\x1B[0m".to_owned(), s.bold().blink().to_string());
@@ -39,8 +39,7 @@ fn test_interface() {
 
 #[test]
 fn test_mix() {
-    use colorful::Base;
-    use colorful::ColorStyleInterface;
+    use colorful::Colorful;
     let s = "Hello world";
     assert_eq!("\x1B[38;5;1;5mHello world\x1B[0m".to_owned(), s.color(Color::Red).blink().to_string());
     assert_eq!("\x1B[38;5;220;1mHello world\x1B[0m".to_owned(), s.bold().color(Color::Gold1).to_string());

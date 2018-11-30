@@ -62,17 +62,56 @@ impl StrMarker for ColorfulString {
     }
 }
 
-pub trait Base {
+pub trait Colorful {
     fn color(self, color: Color) -> ColorfulString;
+    fn on_color(self, color: Color) -> ColorfulString;
     fn style(self, style: Style) -> ColorfulString;
+    // style
+    fn bold(self) -> ColorfulString;
+    fn blink(self) -> ColorfulString;
+    fn dim(self) -> ColorfulString;
+    fn underlined(self) -> ColorfulString;
+    fn reverse(self) -> ColorfulString;
+    fn hidden(self) -> ColorfulString;
+    // basic usage support 15 color
+    // foreground color
+    fn black(self) -> ColorfulString;
+    fn red(self) -> ColorfulString;
+    fn green(self) -> ColorfulString;
+    fn yellow(self) -> ColorfulString;
+    fn blue(self) -> ColorfulString;
+    fn magenta(self) -> ColorfulString;
+    fn cyan(self) -> ColorfulString;
+    fn light_gray(self) -> ColorfulString;
+    fn dark_gray(self) -> ColorfulString;
+    fn light_red(self) -> ColorfulString;
+    fn light_green(self) -> ColorfulString;
+    fn light_yellow(self) -> ColorfulString;
+    fn light_blue(self) -> ColorfulString;
+    fn light_magenta(self) -> ColorfulString;
+    fn light_cyan(self) -> ColorfulString;
+    fn white(self) -> ColorfulString;
+    // background color
+    fn on_black(self) -> ColorfulString;
+    fn on_red(self) -> ColorfulString;
 }
 
-impl<T> Base for T where T: StrMarker {
+impl<T> Colorful for T where T: StrMarker {
+    /// Using enum item is recommended.
     fn color(self, color: Color) -> ColorfulString {
         ColorfulString {
             text: String::from(self.to_str()),
             foreground_color: Some(color), // color will replace
             background_color: self.get_bg_color(),
+            styles: self.get_style(),
+            is_plain: false,
+        }
+    }
+    fn on_color(self, color: Color) -> ColorfulString {
+        ColorfulString {
+            text: String::from(self.to_str()),
+            foreground_color: self.get_fg_color(),
+            background_color: Some(color),
             styles: self.get_style(),
             is_plain: false,
         }
@@ -92,37 +131,6 @@ impl<T> Base for T where T: StrMarker {
             is_plain: false,
         }
     }
-}
-
-pub trait ColorStyleInterface {
-    // style
-    fn bold(self) -> ColorfulString;
-    fn blink(self) -> ColorfulString;
-    fn dim(self) -> ColorfulString;
-    fn underlined(self) -> ColorfulString;
-    fn reverse(self) -> ColorfulString;
-    fn hidden(self) -> ColorfulString;
-    // color
-    fn black(self) -> ColorfulString;
-    fn red(self) -> ColorfulString;
-    fn green(self) -> ColorfulString;
-    fn yellow(self) -> ColorfulString;
-    fn blue(self) -> ColorfulString;
-    fn magenta(self) -> ColorfulString;
-    fn cyan(self) -> ColorfulString;
-    fn light_gray(self) -> ColorfulString;
-    fn dark_gray(self) -> ColorfulString;
-    fn light_red(self) -> ColorfulString;
-    fn light_green(self) -> ColorfulString;
-    fn light_yellow(self) -> ColorfulString;
-    fn light_blue(self) -> ColorfulString;
-    fn light_magenta(self) -> ColorfulString;
-    fn light_cyan(self) -> ColorfulString;
-    fn white(self) -> ColorfulString;
-}
-
-
-impl<T> ColorStyleInterface for T where T: Base {
     // style
     fn bold(self) -> ColorfulString { self.style(Style::Bold) }
     fn blink(self) -> ColorfulString { self.style(Style::Blink) }
@@ -147,13 +155,17 @@ impl<T> ColorStyleInterface for T where T: Base {
     fn light_magenta(self) -> ColorfulString { self.color(Color::LightMagenta) }
     fn light_cyan(self) -> ColorfulString { self.color(Color::LightCyan) }
     fn white(self) -> ColorfulString { self.color(Color::White) }
+    // background color
+    fn on_black(self) -> ColorfulString { self.on_color(Color::White) }
+    fn on_red(self) -> ColorfulString { self.on_color(Color::White) }
 }
+
 
 pub trait ExtraColorInterface {
     fn grey0(self) -> ColorfulString;
 }
 
-impl<T> ExtraColorInterface for T where T: Base {
+impl<T> ExtraColorInterface for T where T: Colorful {
     fn grey0(self) -> ColorfulString { self.color(Color::Grey0) }
 }
 

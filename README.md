@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/da2018/colorful.svg?branch=master)](https://travis-ci.org/da2018/colorful) <a href='https://coveralls.io/github/da2018/colorful?branch=master'><img src='https://coveralls.io/repos/github/da2018/colorful/badge.svg?branch=master' alt='Coverage Status' /></a>
+[![Build Status](https://travis-ci.org/da2018/colorful.svg?branch=master)](https://travis-ci.org/da2018/colorful) [![Coverage Status](https://img.shields.io/coveralls/github/da2018/colorful.svg)](https://coveralls.io/github/da2018/colorful?branch=master)
+
+
 
 
 

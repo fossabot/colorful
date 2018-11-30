@@ -1,7 +1,7 @@
 extern crate colorful;
 extern crate core;
 
-use colorful::Base;
+use colorful::Colorful;
 use colorful::core::Color::*;
 
 #[test]
