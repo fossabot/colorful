@@ -29,23 +29,22 @@ impl Default for ColorfulString {
             foreground_color: None,
             background_color: None,
             styles: None,
-            is_plain: false,
+            is_plain: true,
         }
     }
 }
 
 pub trait StrMarker {
     fn to_str(&self) -> String;
-    fn get_style(&self) -> Option<Vec<Style>>;
-    fn get_fg_color(&self) -> Option<Color>;
+    fn get_style(&self) -> Option<Vec<Style>> { None }
+    fn get_fg_color(&self) -> Option<Color> { None }
+    fn get_bg_color(&self) -> Option<Color> { None }
 }
 
 impl<'a> StrMarker for &'a str {
     fn to_str(&self) -> String {
         String::from(*self)
     }
-    fn get_style(&self) -> Option<Vec<Style>> { None }
-    fn get_fg_color(&self) -> Option<Color> { None }
 }
 
 impl StrMarker for ColorfulString {
@@ -58,53 +57,56 @@ impl StrMarker for ColorfulString {
     fn get_fg_color(&self) -> Option<Color> {
         self.foreground_color.clone()
     }
+    fn get_bg_color(&self) -> Option<Color> {
+        self.background_color.clone()
+    }
 }
 
-
-pub trait Colorful {
+pub trait Base {
     fn color(self, color: Color) -> ColorfulString;
+    fn style(self, style: Style) -> ColorfulString;
+}
+
+impl<T> Base for T where T: StrMarker {
+    fn color(self, color: Color) -> ColorfulString {
+        ColorfulString {
+            text: String::from(self.to_str()),
+            foreground_color: Some(color), // color will replace
+            background_color: self.get_bg_color(),
+            styles: self.get_style(),
+            is_plain: false,
+        }
+    }
+    fn style(self, style: Style) -> ColorfulString {
+        ColorfulString {
+            text: String::from(self.to_str()),
+            styles: match self.get_style() {
+                Some(mut v) => {
+                    v.push(style);
+                    Some(v)
+                }
+                _ => { Some(vec![style]) }
+            },
+            foreground_color: self.get_fg_color(),
+            background_color: self.get_bg_color(),
+            is_plain: false,
+        }
+    }
+}
+
+pub trait ColorStyleInterface {
     fn bold(self) -> ColorfulString;
     fn blink(self) -> ColorfulString;
 }
 
 
-impl<T> Colorful for T where T: StrMarker, {
-    fn color(self, color: Color) -> ColorfulString {
-        ColorfulString {
-            text: String::from(self.to_str()),
-            foreground_color: Some(color), // color will replace
-            styles: self.get_style(),
-            ..ColorfulString::default()
-        }
-    }
+impl<T> ColorStyleInterface for T where T: Base {
     fn bold(self) -> ColorfulString {
-        ColorfulString {
-            text: String::from(self.to_str()),
-            styles: match self.get_style() {
-                Some(mut v) => {
-                    v.push(Style::Bold);
-                    Some(v)
-                }
-                _ => { Some(vec![Style::Bold]) }
-            },
-            foreground_color: self.get_fg_color(),
-            ..ColorfulString::default()
-        }
+        self.style(Style::Bold)
     }
 
     fn blink(self) -> ColorfulString {
-        ColorfulString {
-            text: String::from(self.to_str()),
-            styles: match self.get_style() {
-                Some(mut v) => {
-                    v.push(Style::Blink);
-                    Some(v)
-                }
-                _ => { Some(vec![Style::Blink]) }
-            },
-            foreground_color: self.get_fg_color(),
-            ..ColorfulString::default()
-        }
+        self.style(Style::Blink)
     }
 }
 
