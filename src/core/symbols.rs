@@ -5,7 +5,7 @@ use std::fmt::Result as FmtResult;
 pub enum Symbol {
     Mode,
     Semicolon,
-    Tmp,
+    LeftBrackets,
     Esc,
     Reset,
     Screen256Foreground,
@@ -17,7 +17,7 @@ impl Symbol {
         match self {
             Symbol::Mode => "m",
             Symbol::Semicolon => ";",
-            Symbol::Tmp => "[",
+            Symbol::LeftBrackets => "[",
             Symbol::Esc => "\x1B",
             Symbol::Reset => "\x1B[0m",
             Symbol::Screen256Foreground => "\x1B[38;5;",

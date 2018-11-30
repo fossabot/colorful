@@ -12,6 +12,7 @@ use core::symbols::Symbol;
 
 pub mod core;
 
+
 pub struct ColorfulString {
     text: String,
     foreground_color: Option<Color>,
@@ -30,6 +31,32 @@ impl Default for ColorfulString {
             styles: None,
             is_plain: false,
         }
+    }
+}
+
+pub trait StrMarker {
+    fn to_str(&self) -> String;
+    fn get_style(&self) -> Option<Vec<Style>>;
+    fn get_fg_color(&self) -> Option<Color>;
+}
+
+impl<'a> StrMarker for &'a str {
+    fn to_str(&self) -> String {
+        String::from(*self)
+    }
+    fn get_style(&self) -> Option<Vec<Style>> { None }
+    fn get_fg_color(&self) -> Option<Color> { None }
+}
+
+impl StrMarker for ColorfulString {
+    fn to_str(&self) -> String {
+        self.text.to_owned()
+    }
+    fn get_style(&self) -> Option<Vec<Style>> {
+        self.styles.clone()
+    }
+    fn get_fg_color(&self) -> Option<Color> {
+        self.foreground_color.clone()
     }
 }
 
@@ -81,32 +108,6 @@ impl<T> Colorful for T where T: StrMarker, {
     }
 }
 
-pub trait StrMarker {
-    fn to_str(&self) -> String;
-    fn get_style(&self) -> Option<Vec<Style>>;
-    fn get_fg_color(&self) -> Option<Color>;
-}
-
-impl<'a> StrMarker for &'a str {
-    fn to_str(&self) -> String {
-        String::from(*self)
-    }
-    fn get_style(&self) -> Option<Vec<Style>> { None }
-    fn get_fg_color(&self) -> Option<Color> { None }
-}
-
-impl StrMarker for ColorfulString {
-    fn to_str(&self) -> String {
-        self.text.to_owned()
-    }
-    fn get_style(&self) -> Option<Vec<Style>> {
-        self.styles.clone()
-    }
-    fn get_fg_color(&self) -> Option<Color> {
-        self.foreground_color.clone()
-    }
-}
-
 
 impl Display for ColorfulString {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
@@ -135,13 +136,12 @@ impl Display for ColorfulString {
             match &self.styles {
                 Some(v) => {
                     if !is_init {
-                        write!(f, "{}{}", Symbol::Esc, Symbol::Tmp)?;
+                        write!(f, "{}{}", Symbol::Esc, Symbol::LeftBrackets)?;
                     } else {
                         f.write_str(Symbol::Semicolon.to_str())?;
                     }
                     let t: Vec<String> = v.into_iter().map(|x| x.to_string()).collect();
-                    let c = t.join(";");
-                    f.write_str(&c[..])?;
+                    f.write_str(&t.join(";")[..])?;
                 }
                 _ => {}
             }

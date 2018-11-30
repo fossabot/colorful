@@ -11,6 +11,13 @@ Mode
 ## Highlights
 - Gradient mode
 - Rainbow mode
+- brackets mode
+
+## Usage
+
+use BasicColor; trait
+use ExtraColor; trait
+
 
 
 ## License
